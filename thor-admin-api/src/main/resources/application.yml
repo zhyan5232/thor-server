@@ -5,7 +5,7 @@ spring:
   application:
     name: thor-admin-api
   datasource:
-    url: jdbc:mysql://localhost:3306/thor_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://10.150.35.1:3306/thor_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: thor
     password: zjk@123!
     driver-class-name: com.mysql.cj.jdbc.Driver
