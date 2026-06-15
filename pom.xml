@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <name>Thor Server</name>
-    <description>Thor 分布式文件调度与传输控制系统 - 后端服务器</description>
+    <description>Thor 分布式文件调度与传输控制系统 - 后端服务器 (JDK 8 版本)</description>
 
     <modules>
         <module>thor-common</module>
@@ -19,9 +19,14 @@
     </modules>
 
     <properties>
-        <java.version>17</java.version>
-        <spring-boot.version>3.2.5</spring-boot.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- 使用 Spring Boot 2.7.18 兼容 JDK 8 -->
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <netty.version>4.1.100.Final</netty.version>
         <fastjson2.version>2.0.43</fastjson2.version>
         <lombok.version>1.18.30</lombok.version>
@@ -62,6 +67,15 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
