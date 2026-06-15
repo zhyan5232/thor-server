@@ -3,11 +3,11 @@
 -- MySQL 5.7.30 完整建库建表脚本 (thor_ 前缀)
 -- =====================================================
 
-CREATE DATABASE IF NOT EXISTS `thor_db`
+CREATE DATABASE IF NOT EXISTS `thor`
 DEFAULT CHARACTER SET utf8mb4
 DEFAULT COLLATE utf8mb4_general_ci;
 
-USE `thor_db`;
+USE `thor`;
 
 -- 1. 应用系统表 (thor_app_system)
 DROP TABLE IF EXISTS `thor_app_system`;
@@ -26,7 +26,36 @@ CREATE TABLE `thor_app_system` (
   KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用系统配置表';
 
--- 2. 节点表 (thor_node)
+-- 2. 节点组表 (thor_node_group) - 新增
+DROP TABLE IF EXISTS `thor_node_group`;
+CREATE TABLE `thor_node_group` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `app_system_id` BIGINT UNSIGNED NOT NULL COMMENT '所属应用系统ID',
+  `group_code` VARCHAR(50) NOT NULL COMMENT '节点组编码（全局唯一）',
+  `group_name` VARCHAR(100) NOT NULL COMMENT '节点组名称',
+  `status` TINYINT DEFAULT 1 COMMENT '1-启用 0-停用',
+  `description` VARCHAR(500) DEFAULT NULL,
+  `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_by` VARCHAR(50) DEFAULT NULL,
+  `update_by` VARCHAR(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_group_code` (`group_code`),
+  KEY `idx_app_system_id` (`app_system_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='节点组表';
+
+-- 3. 节点组与节点关联表 (thor_node_group_node)
+DROP TABLE IF EXISTS `thor_node_group_node`;
+CREATE TABLE `thor_node_group_node` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `node_group_id` BIGINT UNSIGNED NOT NULL,
+  `node_id` BIGINT UNSIGNED NOT NULL,
+  `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_group_node` (`node_group_id`, `node_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='节点组与节点关联表';
+
+-- 4. 节点表 (thor_node)
 DROP TABLE IF EXISTS `thor_node`;
 CREATE TABLE `thor_node` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -40,37 +69,3 @@ CREATE TABLE `thor_node` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_node_name` (`node_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='集群节点心跳表';
-
--- 3. 任务路由配置表 (thor_task_cfg)
-DROP TABLE IF EXISTS `thor_task_cfg`;
-CREATE TABLE `thor_task_cfg` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `task_group` VARCHAR(64) DEFAULT NULL,
-  `src_node` VARCHAR(64) DEFAULT NULL,
-  `dst_node` VARCHAR(64) NOT NULL,
-  `file_pattern` VARCHAR(255) NOT NULL,
-  `process_type` VARCHAR(32) DEFAULT 'DIRECT',
-  `from_charset` VARCHAR(32) DEFAULT NULL,
-  `to_charset` VARCHAR(32) DEFAULT NULL,
-  `is_active` TINYINT DEFAULT 1,
-  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `idx_file_pattern` (`file_pattern`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='任务路由与处理策略表';
-
--- 4. 任务流水实例表 (thor_task_instance)
-DROP TABLE IF EXISTS `thor_task_instance`;
-CREATE TABLE `thor_task_instance` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `task_id` VARCHAR(64) NOT NULL,
-  `cfg_id` BIGINT UNSIGNED DEFAULT NULL,
-  `file_name` VARCHAR(255) NOT NULL,
-  `total_size` BIGINT DEFAULT 0,
-  `status` VARCHAR(32) NOT NULL,
-  `start_time` DATETIME DEFAULT NULL,
-  `end_time` DATETIME DEFAULT NULL,
-  `error_msg` TEXT,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_task_id` (`task_id`),
-  KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='核心任务流水账单';

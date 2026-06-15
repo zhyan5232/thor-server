@@ -1,0 +1,9 @@
+package com.thor.common.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.thor.common.entity.ThorNodeGroup;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface ThorNodeGroupMapper extends BaseMapper<ThorNodeGroup> {
+}
