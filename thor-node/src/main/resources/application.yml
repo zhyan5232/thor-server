@@ -1,0 +1,26 @@
+# Thor Node 配置
+spring:
+  application:
+    name: thor-node
+  main:
+    web-application-type: none
+  datasource:
+    url: jdbc:mysql://10.150.35.1:3306/thor_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: thor
+    password: zjk@123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+thor:
+  node:
+    data-home: "E:/thor_workspace/data"
+    received-home: "E:/thor_workspace/received"
+  server:
+    port: 5599
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.thor.node: INFO
