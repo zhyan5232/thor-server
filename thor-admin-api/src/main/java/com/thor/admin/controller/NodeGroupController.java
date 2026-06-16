@@ -18,9 +18,6 @@ public class NodeGroupController {
     @Autowired
     private ThorNodeGroupMapper nodeGroupMapper;
 
-    /**
-     * 获取所有节点组（可按应用系统筛选）
-     */
     @GetMapping("/list")
     public Map<String, Object> list(@RequestParam(required = false) Long appSystemId) {
         QueryWrapper<ThorNodeGroup> query = new QueryWrapper<>();
@@ -38,9 +35,6 @@ public class NodeGroupController {
         return result;
     }
 
-    /**
-     * 新增节点组（必须关联应用系统）
-     */
     @PostMapping
     public Map<String, Object> add(@RequestBody ThorNodeGroup nodeGroup) {
         if (nodeGroup.getAppSystemId() == null) {
@@ -64,9 +58,6 @@ public class NodeGroupController {
         return result;
     }
 
-    /**
-     * 修改节点组
-     */
     @PutMapping("/{id}")
     public Map<String, Object> update(@PathVariable Long id, @RequestBody ThorNodeGroup nodeGroup) {
         nodeGroup.setId(id);
@@ -81,9 +72,6 @@ public class NodeGroupController {
         return result;
     }
 
-    /**
-     * 删除节点组
-     */
     @DeleteMapping("/{id}")
     public Map<String, Object> delete(@PathVariable Long id) {
         nodeGroupMapper.deleteById(id);
